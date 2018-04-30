@@ -86,7 +86,7 @@ class SignInWidget(QWidget):
         Lib_db.setDatabaseName('Library_db.db')
         Lib_db.open()
         query = QSqlQuery()
-        sql = "SELECT * FROM user WHERE StudentId='%s'" % (id)
+        sql = "SELECT * FROM user WHERE Id='%s'" % (id)
         query.exec_(sql)
         Lib_db.close()
 

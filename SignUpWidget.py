@@ -38,17 +38,17 @@ class SignUpWidget(QWidget):
         self.lineEdit_name.setFont(font_2)
         self.lineEdit_name.setMaxLength(10)
         self.lineEdit_name.setFixedHeight(32)
-        self.lineEdit_naem.setFixedWidth(180)
+        self.lineEdit_name.setFixedWidth(180)
         self.lineEdit_pswd = QLineEdit()
         self.lineEdit_pswd.setFont(font_2)
         self.lineEdit_pswd.setMaxLength(30)
         self.lineEdit_pswd.setFixedWidth(180)
-        self.lineEdit_pswd.setFixedHeight(36)
+        self.lineEdit_pswd.setFixedHeight(32)
         self.lineEdit_repswd = QLineEdit()
         self.lineEdit_repswd.setFont(font_2)
         self.lineEdit_repswd.setMaxLength(30)
         self.lineEdit_repswd.setFixedWidth(180)
-        self.lineEdit_repswd.setFixedHeight(36)
+        self.lineEdit_repswd.setFixedHeight(32)
         self.button_signUp = QPushButton("注 册")
         self.button_signUp.setFixedHeight(30)
         self.button_signUp.setFixedWidth(90)
@@ -67,11 +67,11 @@ class SignUpWidget(QWidget):
         self.Flayout.addRow(self.label_name, self.lineEdit_name)
         self.Flayout.addRow(self.label_pswd, self.lineEdit_pswd)
         self.Flayout.addRow(self.label_repswd, self.lineEdit_repswd)
-        self.Flayout.addRow("", self.button_signIn)
+        self.Flayout.addRow("", self.button_signUp)
         self.subWidget_1 = QWidget()
         self.subWidget_1.setLayout(self.Flayout)
         self.subWidget_1.setFixedWidth(300)
-        self.subWidget_1.setFixedHeight(150)
+        self.subWidget_1.setFixedHeight(250)
         self.Hlayout_1.addWidget(self.subWidget_1, Qt.AlignCenter)
         self.subWidget_2 = QWidget()
         self.subWidget_2.setLayout(self.Hlayout_1)
@@ -91,6 +91,8 @@ class SignUpWidget(QWidget):
         self.lineEdit_pswd.setValidator(pValidator)
         self.lineEdit_repswd.setValidator(pValidator)
 
+    stuSignup_signal = pyqtSignal(str)
+
 
     def SignUpSlot(self):
         id=self.lineEdit_id.text()
@@ -107,4 +109,27 @@ class SignUpWidget(QWidget):
         else:
             pswd_md5=hashlib.md5()
             pswd_md5.update(pswd)
-            db_user=
+
+            Lib_db = QSqlDatabase.addDatabase("QSQLITE")
+            Lib_db.setDatabaseName('Library_db.db')
+            Lib_db.open()
+            query = QSqlQuery()
+            sql = "SELECT * FROM user WHERE Pswd='%s'" % (pswd_md5.hexdigest())
+            query.exec_(sql)
+            if query.next() is None:
+                print(QMessageBox.warning(self, "提示", "账号已存在,请重新输入", QMessageBox.Yes))
+                return
+            else:
+                sql="INSERT INTO User VALUE (%s, %s, %s ,0)" % (id, name, pswd_md5.hexdigest())
+                query.exec_(sql)
+                #Lib_db.commit()
+                print(QMessageBox.information(self, "提醒", "您已成功注册账号!", QMessageBox.Yes, QMessageBox.Yes))
+                self.studSignup_signal.emit(id)
+            Lib_db.close()
+            return
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    mainMindow = SignUpWidget()
+    mainMindow.show()
+    sys.exit(app.exec_())
