@@ -9,6 +9,7 @@ class stuViewWidget(QWidget):
         super(stuViewWidget,self).__init__()
         self.stu_id = stu_id
         self.resize(900,600)
+        self.setWindowIcon(QIcon("images/book--pencil.png"))
 
         # Search Line of widget
         font_0=QFont()
@@ -144,11 +145,9 @@ class stuViewWidget(QWidget):
             self.queryModel.setHeaderData(3, Qt.Horizontal, "地点")
             self.queryModel.setHeaderData(4, Qt.Horizontal, "归还时间")
 
-    def printSlot(self, s):
-        print(s)
-
 
     def SubmitSlot(self):
+        tempQuery = QSqlQuery(self.Lib_db)
         if self.button_submit.text() == '借书':
             index = self.tableView.selectedIndexes()
             if len(index) != 1 or index[0].column() != 1:
@@ -156,15 +155,47 @@ class stuViewWidget(QWidget):
                 return
             borrow_id = self.queryModel.data(index[0], Qt.DisplayRole)
             sql = "SELECT NumCanBorrow FROM BookInfo WHERE BookId ='%s';" % borrow_id
-            tempQuery = QSqlQuery(self.Lib_db)
             tempQuery.exec_(sql)
             tempQuery.first()
             if tempQuery.value(0) == 0:
                 QMessageBox.warning(self, "提示", "请选择还有库存的书~", QMessageBox.Yes, QMessageBox.Yes)
                 return
+            sql = "SELECT BorrowState FROM User_Book WHERE BookId ='%s' AND StudentId = '%s' ;" % (borrow_id, self.stu_id)
+            tempQuery.exec_(sql)
+            if tempQuery.next():
+                if tempQuery.value(0) == 1:
+                    QMessageBox.warning(self, "提示", "您已经借过该书~", QMessageBox.Yes, QMessageBox.Yes)
+                    return
+                else:
+                    sql = "UPDATE User_Book SET BorrowState = 1, BorrowTime = DATE('now') , ReturnTime = NULL WHERE StudentId = '%s' AND BookId = '%s';" % (self.stu_id, borrow_id)
+                    tempQuery.exec_(sql)
+                    sql = "UPDATE BookInfo SET NumCanBorrow = NumCanBorrow-1 WHERE BookId = '%s';" % borrow_id
+                    tempQuery.exec_(sql)
+                    QMessageBox.information(self, "消息", "借阅成功", QMessageBox.Yes)
+                    self.SearchSlot()
+                    return
+            else:
+                sql = "UPDATE BookInfo SET NumCanBorrow = NumCanBorrow-1 WHERE BookId = '%s';" % borrow_id
+                tempQuery.exec_(sql)
+                sql = "INSERT INTO User_Book VALUES ('%s', '%s', DATE('now'), NULL , 1);" % (self.stu_id, borrow_id)
+                tempQuery.exec_(sql)
+                QMessageBox.information(self, "消息", "借阅成功", QMessageBox.Yes)
+                self.SearchSlot()
+                return
 
         elif self.button_submit.text() == '还书':
-            pass
+            index = self.tableView.selectedIndexes()
+            if len(index) != 1 or index[0].column() != 1:
+                QMessageBox.warning(self, "提示", "请仅选择一个书号~", QMessageBox.Yes, QMessageBox.Yes)
+                return
+            borrow_id = self.queryModel.data(index[0], Qt.DisplayRole)
+            sql = "UPDATE BookInfo SET NumCanBorrow = NumCanBorrow+1 WHERE BookId = '%s';" % borrow_id
+            tempQuery.exec_(sql)
+            sql = "UPDATE User_Book SET ReturnTime = DATE('now'), BorrowState = 0 WHERE StudentId = '%s' AND BookId = '%s';" % (self.stu_id, borrow_id)
+            tempQuery.exec_(sql)
+            QMessageBox.information(self, "消息", "还书成功")
+            self.SearchSlot()
+            return
 
 
 
@@ -172,7 +203,7 @@ class stuViewWidget(QWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    mainMindow = stuViewWidget(13)
+    mainMindow = stuViewWidget('PB16001775')
     mainMindow.show()
     sys.exit(app.exec_())
 
