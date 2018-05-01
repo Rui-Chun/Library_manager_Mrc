@@ -55,7 +55,7 @@ class SignUpWidget(QWidget):
         self.button_signUp.setFont(font_1)
 
         # Layout
-        self.Vlayout_main = QVBoxLayout(self)
+        self.Vlayout_main = QVBoxLayout()
         self.Hlayout_0 = QHBoxLayout()
         self.Hlayout_1 = QHBoxLayout()
         self.Flayout = QFormLayout()
@@ -77,6 +77,7 @@ class SignUpWidget(QWidget):
         self.subWidget_2.setLayout(self.Hlayout_1)
         self.Vlayout_main.addWidget(self.subWidget_0)
         self.Vlayout_main.addWidget(self.subWidget_2, Qt.AlignCenter)
+        self.setLayout(self.Vlayout_main)
 
         self.button_signUp.pressed.connect(self.SignUpSlot)
 
@@ -108,7 +109,7 @@ class SignUpWidget(QWidget):
             return
         else:
             pswd_md5=hashlib.md5()
-            pswd_md5.update(pswd)
+            pswd_md5.update(pswd.encode(encoding='utf-8'))
 
             Lib_db = QSqlDatabase.addDatabase("QSQLITE")
             Lib_db.setDatabaseName('Library_db.db')
@@ -120,11 +121,13 @@ class SignUpWidget(QWidget):
                 print(QMessageBox.warning(self, "提示", "账号已存在,请重新输入", QMessageBox.Yes))
                 return
             else:
-                sql="INSERT INTO User VALUE (%s, %s, %s ,0)" % (id, name, pswd_md5.hexdigest())
+                sql="INSERT INTO User VALUES ('%s', '%s', '%s' ,0)" % (id, name, pswd_md5.hexdigest())
                 query.exec_(sql)
-                #Lib_db.commit()
+                print(Lib_db.lastError().text())
+                Lib_db.commit()
+                print(Lib_db.lastError().text())
                 print(QMessageBox.information(self, "提醒", "您已成功注册账号!", QMessageBox.Yes, QMessageBox.Yes))
-                self.studSignup_signal.emit(id)
+                self.stuSignup_signal.emit(id)
             Lib_db.close()
             return
 
