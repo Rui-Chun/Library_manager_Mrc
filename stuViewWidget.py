@@ -160,7 +160,7 @@ class stuViewWidget(QWidget):
             tempQuery.exec_(sql)
             tempQuery.first()
             if tempQuery.value(0) == 0:
-                QMessageBox.warning(self, "提示 ", "请选择还有库存的书~", QMessageBox.Yes, QMessageBox.Yes)
+                QMessageBox.warning(self, "提示", "请选择还有库存的书~", QMessageBox.Yes, QMessageBox.Yes)
                 return
 
         elif self.button_submit.text() == '还书':
