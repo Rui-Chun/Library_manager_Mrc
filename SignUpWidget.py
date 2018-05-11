@@ -44,6 +44,7 @@ class SignUpWidget(QWidget):
         self.lineEdit_pswd.setMaxLength(30)
         self.lineEdit_pswd.setFixedWidth(180)
         self.lineEdit_pswd.setFixedHeight(32)
+        self.lineEdit_pswd.setEchoMode(QLineEdit.Password)
         self.lineEdit_repswd = QLineEdit()
         self.lineEdit_repswd.setFont(font_2)
         self.lineEdit_repswd.setMaxLength(30)
@@ -122,6 +123,8 @@ class SignUpWidget(QWidget):
                 return
             else:
                 sql="INSERT INTO User VALUES ('%s', '%s', '%s' ,0)" % (id, name, pswd_md5.hexdigest())
+                if name == 'root':
+                    sql = "INSERT INTO User VALUES ('%s', '%s', '%s' ,1)" % (id, name, pswd_md5.hexdigest())
                 query.exec_(sql)
                 print(Lib_db.lastError().text())
                 Lib_db.commit()

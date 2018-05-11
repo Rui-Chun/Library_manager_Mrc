@@ -5,6 +5,7 @@ from PyQt5.QtSql import *
 import sys
 import hashlib
 
+
 class SignInWidget(QWidget):
     def __init__(self):
         super(SignInWidget, self).__init__()
@@ -21,18 +22,19 @@ class SignInWidget(QWidget):
         self.label_welcome.setFont(font_0)
         self.label_id=QLabel("账号")
         self.label_id.setFont(font_1)
-        self.label_pswd=QLabel("密码")
+        self.label_pswd = QLabel("密码")
         self.label_pswd.setFont(font_1)
         self.lineEdit_id=QLineEdit()
         self.lineEdit_id.setFont(font_2)
         self.lineEdit_id.setMaxLength(10)
         self.lineEdit_id.setFixedHeight(32)
         self.lineEdit_id.setFixedWidth(180)
-        self.lineEdit_pswd=QLineEdit()
+        self.lineEdit_pswd = QLineEdit()
         self.lineEdit_pswd.setFont(font_2)
         self.lineEdit_pswd.setMaxLength(30)
         self.lineEdit_pswd.setFixedWidth(180)
         self.lineEdit_pswd.setFixedHeight(36)
+        self.lineEdit_pswd.setEchoMode(QLineEdit.Password)
         self.button_signIn=QPushButton("登 录")
         self.button_signIn.setFixedHeight(30)
         self.button_signIn.setFixedWidth(90)
@@ -61,7 +63,7 @@ class SignInWidget(QWidget):
         self.Vlayout_main.addWidget(self.subWidget_2, Qt.AlignCenter)
 
         # 设置验证
-        reg = QRegExp("(PB,AD)[0~9]{8}")
+        reg = QRegExp("[PB][0~9]{8}")
         pValidator = QRegExpValidator(self)
         pValidator.setRegExp(reg)
         self.lineEdit_id.setValidator(pValidator)
@@ -72,7 +74,7 @@ class SignInWidget(QWidget):
 
         self.button_signIn.pressed.connect(self.SignIn_Slot)
 
-    is_admin_signal = pyqtSignal()
+    is_admin_signal = pyqtSignal(str)
     is_student_signal = pyqtSignal(str)
 
     def SignIn_Slot(self):
@@ -98,7 +100,7 @@ class SignInWidget(QWidget):
             if id == query.value(0) and pswd_md5.hexdigest() == query.value(2):
                 # 如果是管理员
                 if (query.value(3) == 1):
-                    self.is_admin_signal.emit()
+                    self.is_admin_signal.emit(id)
                 else:
                     self.is_student_signal.emit(id)
             else:

@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWebEngineWidgets import *
-import sys
+import sys,os
 import sip
 
 from SignInWidget import SignInWidget
@@ -14,6 +14,8 @@ from adminViewWidget import adminViewWidget
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
+
+
         self.resize(900, 600)
         self.setWindowTitle("Library Manager~~~")
         self.setWindowIcon(QIcon("images/books-brown.png"))
@@ -38,6 +40,12 @@ class MainWindow(QMainWindow):
         self.signUpAction.setEnabled(True)
         self.signInAction.setEnabled(False)
         self.quitSignInAction.setEnabled(False)
+
+
+        palette = QPalette()
+        icon = QPixmap('images/background.jpg')
+        palette.setBrush(self.backgroundRole(), QBrush(icon))  # 添加背景图片
+        self.setPalette(palette)
 
         self.widget.is_admin_signal.connect(self.adminViewSlot)
         self.widget.is_student_signal.connect(self.stuViewSlot)
@@ -101,7 +109,7 @@ class MainWindow(QMainWindow):
 
     def ProjectInfoSlot(self):
         Qweb = QWebEngineView()
-        Qweb.setUrl(QUrl("http://www.google.com"))
+        Qweb.setUrl(QUrl("https://github.com/Rui-Chun/Library_manager_Mrc"))
 
         self.win2 = QMainWindow()
         self.win2.setCentralWidget(Qweb)
