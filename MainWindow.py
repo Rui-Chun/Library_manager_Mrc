@@ -16,7 +16,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
 
-        self.resize(900, 600)
+        self.resize(1100, 900)
         self.setWindowTitle("Library Manager~~~")
         self.setWindowIcon(QIcon("images/books-brown.png"))
         self.widget=SignInWidget()
@@ -57,9 +57,9 @@ class MainWindow(QMainWindow):
         self.ProjectInfo.triggered.connect(self.ProjectInfoSlot)
 
 
-    def adminViewSlot(self):
+    def adminViewSlot(self,admin_id):
         sip.delete(self.widget)
-        self.widget = adminViewWidget()
+        self.widget = adminViewWidget(admin_id)
         self.setCentralWidget(self.widget)
         self.signUpAction.setEnabled(False)
         self.signInAction.setEnabled(True)

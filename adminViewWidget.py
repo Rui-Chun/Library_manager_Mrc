@@ -210,12 +210,12 @@ class adminViewWidget(QWidget):
             sql = " %s LIKE '%s' ORDER BY '%s';" % (
                 searchOption, condition, searchOption)
             self.queryModel_log.setFilter(sql)
-
-        self.queryModel_log.setHeaderData(0, Qt.Horizontal, "书号")
-        self.queryModel_log.setHeaderData(1, Qt.Horizontal, "书名")
-        self.queryModel_log.setHeaderData(2, Qt.Horizontal, "操作日期")
-        self.queryModel_log.setHeaderData(3, Qt.Horizontal, "买入OR淘汰")
-        self.queryModel_log.setHeaderData(4, Qt.Horizontal, "数量")
+        self.queryModel_log.setHeaderData(0, Qt.Horizontal, "操作序号")
+        self.queryModel_log.setHeaderData(1, Qt.Horizontal, "书号")
+        self.queryModel_log.setHeaderData(2, Qt.Horizontal, "书名")
+        self.queryModel_log.setHeaderData(3, Qt.Horizontal, "操作日期")
+        self.queryModel_log.setHeaderData(4, Qt.Horizontal, "买入OR淘汰")
+        self.queryModel_log.setHeaderData(5, Qt.Horizontal, "数量")
 
 
     def ModeSlot(self, index):
@@ -287,12 +287,19 @@ class adminViewWidget(QWidget):
                                               QMessageBox.No)
                 if msgBox == QMessageBox.No:
                     return
+            BookName = tempQuery.value(0)
+            Num = tempQuery.value(7)
+            sql = "SELECT OP_Id FROM adminLog ORDER BY OP_Id DESC "
+            tempQuery.exec_(sql)
+            if tempQuery.first():
+                Opid = tempQuery.value(0)+1
+            else:
+                Opid=1
+            sql = "INSERT INTO adminLog VALUES (%d,'%s', '%s', Date('now'), 0, %d )" % (Opid, del_id, BookName, Num)
+            tempQuery.exec_(sql)
             sql = "DELETE FROM BookInfo WHERE BookId == '%s'" % del_id
             tempQuery.exec_(sql)
             # adminLog ????
-            sql = "INSERT INTO adminLog VALUES ('%s', '%s', Date('now'), 0, %d )" % \
-                  (del_id, tempQuery.value(0), tempQuery.value(7))
-            tempQuery.exec_(sql)
         elif curIndex ==1:
             del_id = self.queryModel_User.data(index[0], Qt.DisplayRole)
             if len(index) != 1 or index[0].column() != 0:

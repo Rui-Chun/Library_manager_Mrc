@@ -50,6 +50,7 @@ class SignUpWidget(QWidget):
         self.lineEdit_repswd.setMaxLength(30)
         self.lineEdit_repswd.setFixedWidth(180)
         self.lineEdit_repswd.setFixedHeight(32)
+        self.lineEdit_repswd.setEchoMode(QLineEdit.Password)
         self.button_signUp = QPushButton("注 册")
         self.button_signUp.setFixedHeight(30)
         self.button_signUp.setFixedWidth(90)

@@ -44,7 +44,7 @@ class addAdminDia(QDialog):
         self.LineEdit_Name.setMaxLength(20)
         self.LineEdit_Pswd.setMaxLength(30)
         self.LineEdit_Pswd.setEchoMode(QLineEdit.Password)
-        self.LineEdit_Pswd.setEchoMode(QLineEdit.Password)
+        self.LineEdit_rePswd.setEchoMode(QLineEdit.Password)
         self.LineEdit_rePswd.setMaxLength(30)
 
         self.Button_add = QPushButton("添加")

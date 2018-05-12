@@ -73,6 +73,7 @@ class SignInWidget(QWidget):
         self.lineEdit_pswd.setValidator(pValidator)
 
         self.button_signIn.pressed.connect(self.SignIn_Slot)
+        self.lineEdit_pswd.returnPressed.connect(self.SignIn_Slot)
 
     is_admin_signal = pyqtSignal(str)
     is_student_signal = pyqtSignal(str)

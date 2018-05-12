@@ -108,7 +108,13 @@ class addBookDia(QDialog):
                     bookName, bookId, authName, bookCategory, location, publisher, publishTime, addBookNum, addBookNum)
             query.exec_(sql)
             db.commit()
-            sql = "INSERT INTO adminLog VALUES ('%s','%s', DATE('now'), 1, %d)" % (bookId, bookName, addBookNum)
+            sql = "SELECT OP_Id FROM adminLog ORDER BY OP_Id"
+            query.exec_(sql)
+            if query.first():
+                Opid = query.value(0) +1
+            else:
+                Opid = 1
+            sql = "INSERT INTO adminLog VALUES (%d,'%s', '%s', Date('now'), 1, %d )" % (Opid, bookId, bookName, addBookNum)
             query.exec_(sql)
             db.commit()
             QMessageBox.information(self, "提示", "添加书籍成功!", QMessageBox.Yes, QMessageBox.Yes)
