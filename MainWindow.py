@@ -16,7 +16,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
 
-        self.resize(1100, 900)
+        self.resize(900, 600)
         self.setWindowTitle("Library Manager~~~")
         self.setWindowIcon(QIcon("images/books-brown.png"))
         self.widget=SignInWidget()

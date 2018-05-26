@@ -63,11 +63,7 @@ class SignInWidget(QWidget):
         self.Vlayout_main.addWidget(self.subWidget_2, Qt.AlignCenter)
 
         # 设置验证
-        reg = QRegExp("[PB][0~9]{8}")
         pValidator = QRegExpValidator(self)
-        pValidator.setRegExp(reg)
-        self.lineEdit_id.setValidator(pValidator)
-
         reg = QRegExp("[a-zA-z0-9]+$")
         pValidator.setRegExp(reg)
         self.lineEdit_pswd.setValidator(pValidator)

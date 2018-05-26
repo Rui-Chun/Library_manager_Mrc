@@ -30,7 +30,7 @@ class adminViewWidget(QWidget):
         self.combobox_adminMode = QComboBox()
         self.combobox_adminMode.setFont(font_0)
         self.combobox_adminMode.setFixedHeight(32)
-        self.combobox_adminMode.addItems(['图书管理', '学生账号管理', '管理记录'])
+        self.combobox_adminMode.addItems(['图书管理', '学生账号管理', '管理日志'])
         if adminId == 'root':
             self.combobox_adminMode.addItem('admin账号管理')
 
