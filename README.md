@@ -1,10 +1,10 @@
 # Library_manager_Mrc
-Library_Manager_Mrc
+A Library Manager app using PyQt5 and Sqlite.
+
 # 数据库实验报告
 
 [TOC]
 
-实验报告等全部文件可以在[Github查看](https://github.com/Rui-Chun/Library_manager_Mrc/tree/masterl)
 
 ## 机房上机实验
 
@@ -16,7 +16,7 @@ Library_Manager_Mrc
 
 本程序使用PyQt5+Sqlite实现
 
-尝试将程序编译成exe时，数据库文件连接出现问题，个人认为这不是本门课考察重点\_(:з」∠)\_，求放过。希望助教直接运行代码，造成不便希望谅解。
+尝试将程序编译成exe时，数据库文件连接出现问题。希望助教直接运行代码，造成不便希望谅解。
 
 测试环境：python 3.6
 
